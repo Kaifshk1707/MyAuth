@@ -1,18 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ToastAndroid,
 } from 'react-native';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [display, setDisplay] = useState(false);
+  const [showWelcomeText, setShowWelcomeText] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowWelcomeText(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleLogin = () => {
     // ✅ Show Toast Message
@@ -26,6 +30,17 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      {showWelcomeText && (
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'blue',
+            marginBottom: 10,
+          }}>
+          Welcome to My App
+        </Text>
+      )}
       <Text style={styles.title}>Login</Text>
 
       <View style={styles.inputContainer}>
@@ -48,18 +63,9 @@ const LoginScreen = ({navigation}) => {
         />
       </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        // onPress={() => navigation.navigate('HomeScreen')}>
-        onPress={handleLogin}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-
-      {/* {display ? (
-        <View>
-          <Text>Successfully</Text>
-        </View>
-      ) : null} */}
 
       <TouchableOpacity
         onPress={() => alert('Forgot Password?')}
