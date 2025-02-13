@@ -14,7 +14,7 @@ const LoginScreen = ({navigation}) => {
   const [showWelcomeText, setShowWelcomeText] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowWelcomeText(false), 10000);
+    const timer = setTimeout(() => setShowWelcomeText(false), 5000);
     return () => clearTimeout(timer);
   }, []);
 
