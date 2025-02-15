@@ -16,7 +16,7 @@ const HomeScreen = ({navigation}) => {
   const getApiData = async () => {
     setIsLoading(true); // Show loader while data is being fetched
     try {
-      const response = await fetch('https://dummyjson.com/products'); // Get data from API
+      const response = await fetch('https://dummyjson.com/products'); 
       const result = await response.json(); // Convert response to JSON format
       setData(result.products); // Store the products in state
     } catch (error) {
@@ -24,20 +24,14 @@ const HomeScreen = ({navigation}) => {
     }
     setIsLoading(false); // Hide loader after data is loaded
   };
+
   useEffect(() => {
     getApiData();
   }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#F5F5F5', padding: 16}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          backgroundColor: '#F5F5F5',
-          justifyContent: 'space-between',
-          width: '90%',
-          alignItems: 'center',
-          alignSelf: 'center',
-        }}>
+      
         <Text
           style={{
             color: '#333',
@@ -49,23 +43,11 @@ const HomeScreen = ({navigation}) => {
           Home
         </Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
-          <Text
-            style={{
-              color: '#333',
-              fontSize: 28,
-              fontWeight: 'bold',
-              textAlign: 'center',
-              marginBottom: 10,
-            }}>
-            Go
-          </Text>
-        </TouchableOpacity>
-      </View>
+        
       {/* Search Input */}
       <View>
         <TouchableOpacity onPress={() => setShow(!show)}>
-          {show ? null : <Text>Search click here...</Text>}
+          {show ? null : <Text style={{textAlign:"center",fontSize:30,textAlign:"left"}}>Search</Text>}
         </TouchableOpacity>
       </View>
 
@@ -142,9 +124,16 @@ const HomeScreen = ({navigation}) => {
               <Text style={{color: '#666', marginTop: 5}}>
                 {item.description}
               </Text>
-              <Text style={{fontWeight: 'bold', color: '#222', marginTop: 5}}>
-                :moneybag: ${item.price}
-              </Text>
+              <View style={{width:"100%",flexDirection:"row", justifyContent:"space-between"}}>
+                <Text style={{ fontWeight: 'bold', color: '#222', marginTop: 5,fontSize:20 }}>
+                  ${item.price}
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')} style={{ backgroundColor: "lightgrey", padding: "1.5%", borderRadius: 5 }}>
+                  <Text style={{ fontWeight: 'bold', color: '#222', marginTop: 5, fontSize: 20 }}>
+                    More details
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         />
