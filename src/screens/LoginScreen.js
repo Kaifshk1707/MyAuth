@@ -1,138 +1,78 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ToastAndroid,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showWelcomeText, setShowWelcomeText] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowWelcomeText(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Warning!', 'Please enter your valid details');
+      return;
+    }
+    const storedEmail = await AsyncStorage.getItem('email');
+    const storedPassword = await AsyncStorage.getItem('password');
 
-  const handleLogin = () => {
-    // ✅ Show Toast Message
-    ToastAndroid.show('Login Successfully', ToastAndroid.SHORT);
-
-    // ✅ Navigate to Home After 2 Seconds
-    setTimeout(() => {
-      navigation.navigate('HomeScreen');
-    }, 1500);
+    if (email === storedEmail && password === storedPassword) {
+      Alert.alert('Success', 'Login Successful');
+      navigation.replace('HomeScreen');
+    } else {
+      Alert.alert('Wrong details!', 'Please try again');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      {showWelcomeText && (
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: 'blue',
-            marginBottom: 10,
-          }}>
-          Welcome to My App
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5' }}>
+      <Image style={{ height: 150, width: 150, borderRadius: 100 }} source={require("./../assets/image/Login.png")} />
+      <Text style={{ fontSize: 28, fontWeight: 'bold', marginBottom: 20 }}>Login</Text>
+
+      <TextInput style={{
+        width: '90%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginBottom: 15,
+        fontSize: 16,
+      }} placeholder="Enter Email" keyboardType="email-address" value={email} onChangeText={setEmail} />
+      <TextInput style={{
+        width: '90%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginBottom: 15,
+        fontSize: 16,
+      }} placeholder="Enter Password" secureTextEntry value={password} onChangeText={setPassword} />
+
+      <TouchableOpacity style={{
+        backgroundColor: '#4A9',
+        paddingVertical: 15,
+        borderRadius: 10,
+        width: '90%',
+        alignItems: 'center',
+        marginTop: 10,
+      }} onPress={handleLogin}>
+        <Text style={{
+          color: '#fff',
+          fontSize: 18,
+          fontWeight: 'bold',
+        }}>Login</Text>
+      </TouchableOpacity>
+
+      <View style={{ flexDirection: 'row', marginTop: 16 }}>
+        <Text style={{ color: '#4A9', fontSize: 14 }}>
+          Don't have an account?{' '}
         </Text>
-      )}
-      <Text style={styles.title}>Login</Text>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={text => setEmail(text)}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
+          <Text style={{ color: '#4A9', fontSize: 15, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Password"
-          secureTextEntry
-          value={password}
-          onChangeText={text => setPassword(text)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => alert('Forgot Password?')}
-        style={styles.forgotButton}>
-        <Text style={styles.forgotText}>Forgot Password?</Text>
-      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    width: '90%',
-    height: 50,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#4A90E2',
-    paddingVertical: 15,
-    borderRadius: 10,
-    width: '90%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  forgotButton: {
-    marginTop: 15,
-  },
-  forgotText: {
-    color: '#4A90E2',
-    fontSize: 14,
-  },
-});
-
 export default LoginScreen;
