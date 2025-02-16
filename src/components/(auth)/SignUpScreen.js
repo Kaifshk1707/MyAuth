@@ -19,7 +19,7 @@ const SignUpScreen = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5' }}>
-            <Image style={{ height: 150, width: 150, borderRadius: 100 }} source={require("./../assets/image/SignUp.jpeg")} />
+            <Image style={{ height: 150, width: 150, borderRadius: 100 }} source={require("./../../assets/image/SignUp.jpeg")} />
             <Text style={{ fontSize: 28, fontWeight: 'bold', marginBottom: 20 }}>Sign Up</Text>
 
             <TextInput style={{
