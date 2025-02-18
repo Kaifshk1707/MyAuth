@@ -20,7 +20,7 @@ const MyTabs = () => {
                     left: 20,
                     right: 20,
                     elevation: 5,
-                    backgroundColor: '#fff',
+                    backgroundColor: '#1E293B',
                     borderRadius: 25,
                     height: 80,
                     shadowColor: '#000',
