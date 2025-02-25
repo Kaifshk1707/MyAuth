@@ -8,34 +8,51 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {addToCart} from '../../redux/action';
+
 const HomeProduct = ({navigation}) => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [show, setShow] = useState(false);
 
+  const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.reducer);
+
   const getApiData = async () => {
-    setIsLoading(true); // Show loader while data is being fetched
+    setIsLoading(true);
     try {
       const response = await fetch('https://dummyjson.com/products');
-      const result = await response.json(); // Convert response to JSON format
-      setData(result.products); // Store the products in state
+      const result = await response.json();
+      setData(result.products);
     } catch (error) {
-      console.log('Error fetching data:', error); // Show error if something goes wrong
+      console.log('Error fetching data:', error);
     }
-    setIsLoading(false); // Hide loader after data is loaded
+    setIsLoading(false);
   };
 
   useEffect(() => {
     getApiData();
   }, []);
 
+  const handleAddToCart = item => {
+    dispatch(addToCart(item));
+  };
+
+  useEffect(() => {}, [cartItems]);
+
+  // Function to check if an item is in the cart
+  const isItemInCart = item => {
+    return cartItems.some(cartItem => cartItem.id === item.id);
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: '#F5F5F5', padding: 10}}>
       {/* Search Input */}
       <View>
         <TouchableOpacity onPress={() => setShow(!show)}>
-          {show ? null : (
+          {!show && (
             <Text
               style={{textAlign: 'center', fontSize: 30, textAlign: 'left'}}>
               Search
@@ -44,7 +61,7 @@ const HomeProduct = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      {show ? (
+      {show && (
         <View
           style={{
             flexDirection: 'row',
@@ -63,13 +80,11 @@ const HomeProduct = ({navigation}) => {
           />
           {name.length > 0 && (
             <TouchableOpacity onPress={() => setName('')} style={{padding: 8}}>
-              <Text style={{color: '#888', fontSize: 18}}>
-                :heavy_multiplication_x:
-              </Text>
+              <Text style={{color: '#888', fontSize: 18}}>✖</Text>
             </TouchableOpacity>
           )}
         </View>
-      ) : null}
+      )}
 
       {/* Search Text */}
       {name.length > 0 && (
@@ -77,6 +92,7 @@ const HomeProduct = ({navigation}) => {
           Searching: <Text style={{fontWeight: 'bold'}}>{name}</Text>
         </Text>
       )}
+
       {/* Show Loader When Fetching Data */}
       {isLoading ? (
         <ActivityIndicator
@@ -88,15 +104,15 @@ const HomeProduct = ({navigation}) => {
         <FlatList
           data={data}
           keyExtractor={item => item.id.toString()}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           renderItem={({item}) => (
             <View
               style={{
-                backgroundColor: '#fff',
+                backgroundColor: '#4A99',
                 padding: 15,
                 borderRadius: 10,
                 marginTop: 10,
-                elevation: 3,
+                // elevation: 1,
               }}>
               {/* Product Image */}
               <Image
@@ -122,33 +138,46 @@ const HomeProduct = ({navigation}) => {
                   width: '100%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: 10,
                 }}>
                 <Text
                   style={{
                     fontWeight: 'bold',
                     color: '#222',
-                    marginTop: 5,
                     fontSize: 20,
                   }}>
                   ${item.price}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('SearchScreen')}
-                  style={{
-                    backgroundColor: 'lightgrey',
-                    padding: '1.5%',
-                    borderRadius: 5,
-                  }}>
-                  <Text
+
+                {/* Add or Remove Button */}
+                {isItemInCart(item) ? (
+                  <TouchableOpacity
+                    onPress={() => handleAddToCart(item)}
                     style={{
-                      fontWeight: 'bold',
-                      color: '#222',
-                      marginTop: 5,
-                      fontSize: 16,
+                      backgroundColor: '#FF6347',
+                      padding: 10,
+                      borderRadius: 5,
                     }}>
-                    Add to Cart
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{fontWeight: 'bold', color: '#fff', fontSize: 16}}>
+                      Remove
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => handleAddToCart(item)}
+                    style={{
+                      backgroundColor: '#4CAF50',
+                      padding: 10,
+                      borderRadius: 5,
+                    }}>
+                    <Text
+                      style={{fontWeight: 'bold', color: '#fff', fontSize: 16}}>
+                      Add
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           )}
@@ -157,4 +186,5 @@ const HomeProduct = ({navigation}) => {
     </View>
   );
 };
+
 export default HomeProduct;
