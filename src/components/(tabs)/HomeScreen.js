@@ -1,6 +1,7 @@
 import {View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import HomeProduct from '../screens/HomeProduct';
+import {useSelector} from 'react-redux';
 const HomeScreen = ({navigation}) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +22,13 @@ const HomeScreen = ({navigation}) => {
     getApiData();
   }, []);
 
+  const cartData = useSelector(state => state.reducer);
+  const [cartItem, setCartItem] = useState(0);
+
+  useEffect(() => {
+    setCartItem(cartData.length);
+  }, [cartData]);
+
   return (
     <View style={{flex: 1, backgroundColor: '#F5F5F5', padding: 16}}>
       <Text
@@ -29,9 +37,11 @@ const HomeScreen = ({navigation}) => {
           fontSize: 28,
           fontWeight: 'bold',
           textAlign: 'right',
-          marginBottom: 10,
+          backgroundColor: '#4A99',
+          borderRadius: 10,
+          padding: 5,
         }}>
-        0
+        {cartItem}
       </Text>
       <HomeProduct />
     </View>
