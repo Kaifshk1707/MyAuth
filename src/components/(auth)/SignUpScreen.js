@@ -20,9 +20,6 @@ const SignUpScreen = ({navigation}) => {
     }
     await AsyncStorage.setItem('email', email);
     await AsyncStorage.setItem('password', password);
-    console.error(email);
-    console.error(password);
-
     Alert.alert('Success', 'Registration Successful.');
     navigation.replace('LoginScreen');
   };
