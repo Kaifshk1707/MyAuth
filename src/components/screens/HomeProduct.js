@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {addToCart} from '../../redux/action';
+import {addToCart, removeToCart} from '../../redux/action';
 
 const HomeProduct = ({navigation}) => {
   const [data, setData] = useState([]);
@@ -40,9 +40,11 @@ const HomeProduct = ({navigation}) => {
     dispatch(addToCart(item));
   };
 
-  useEffect(() => {}, [cartItems]);
+  const handleRemoveToCart = item => {
+    dispatch(removeToCart(item.id));
+  };
 
-  // Function to check if an item is in the cart
+  useEffect(() => {}, [cartItems]);
   const isItemInCart = item => {
     return cartItems.some(cartItem => cartItem.id === item.id);
   };
@@ -153,7 +155,7 @@ const HomeProduct = ({navigation}) => {
                 {/* Add or Remove Button */}
                 {isItemInCart(item) ? (
                   <TouchableOpacity
-                    onPress={() => handleAddToCart(item)}
+                    onPress={() => handleRemoveToCart(item)}
                     style={{
                       backgroundColor: '#FF6347',
                       padding: 10,
